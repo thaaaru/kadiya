@@ -4,7 +4,7 @@
   <p><strong>A lightweight, cost-first AI assistant for Sri Lanka</strong></p>
   <p>
     <img src="https://img.shields.io/badge/Telegram-ready-2CA5E0?style=flat&logo=telegram&logoColor=white" alt="Telegram">
-    <img src="https://img.shields.io/badge/cost-$0.50--7%2Fmo-brightgreen" alt="Cost">
+    <img src="https://img.shields.io/badge/cost-$10--15%2Fmo-brightgreen" alt="Cost">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
     <img src="https://img.shields.io/badge/python-%E2%89%A53.11-blue" alt="Python">
   </p>
@@ -27,7 +27,7 @@ NanoBot is an ultra-lightweight AI assistant (~4,000 lines of core code). kadiya
 | Sri Lanka locale | Sinhala/English, LKR, Asia/Colombo, Singlish input | Global/CN focus |
 | Sri Lanka skills | Translation, PII redaction, Telegram formatting | General skills |
 | Office skills | Excel, Word, PowerPoint generation | -- |
-| Cost target | $0.50-2/mo LLM + $0-5/mo server | Varies |
+| Cost target | $10+/mo LLM + $0-5/mo server | Varies |
 | Primary channel | Telegram | Feishu, DingTalk, QQ, WeChat, etc. |
 | Update checker | Checks GitHub releases on gateway startup | -- |
 | Windows installer | One-click `install.bat` (native, no WSL) | Manual |
@@ -145,15 +145,15 @@ GitHub integration, weather, cron/scheduling, memory, and the skill creator. See
 
 ## Cost
 
-kadiya is designed to cost **$0.50-7/month** for typical personal use, depending on your setup.
+kadiya is designed to cost **$10-15/month** for typical personal use, depending on your setup.
 
 ### Cost breakdown
 
 | Component | Local setup | Cloud setup |
 |-----------|------------|-------------|
-| LLM API calls | $0.50-2/mo | $0.50-2/mo |
+| LLM API calls | $10+/mo | $10+/mo |
 | Cloud server | $0 (runs on your PC) | $3-5/mo (cheap VPS) |
-| **Total** | **$0.50-2/mo** | **$3.50-7/mo** |
+| **Total** | **$10+/mo** | **$13-15/mo** |
 
 > **Local setup** — run kadiya on your own PC or laptop (no server cost).
 > **Cloud setup** — run 24/7 on a VPS so Telegram works while your PC is off (e.g., Oracle Cloud free tier, Hetzner $3.29/mo, DigitalOcean $4/mo).
@@ -175,8 +175,8 @@ kadiya is designed to cost **$0.50-7/month** for typical personal use, depending
 | ChatGPT Plus | $20 | LLM only |
 | Claude Pro | $20 | LLM only |
 | Typical API usage (GPT-4o) | $10-50+ | LLM only |
-| **kadiya (local)** | **$0.50-2** | LLM API |
-| **kadiya (cloud)** | **$3.50-7** | LLM API + VPS |
+| **kadiya (local)** | **$10+** | LLM API |
+| **kadiya (cloud)** | **$13-15** | LLM API + VPS |
 
 ## Configuration
 
