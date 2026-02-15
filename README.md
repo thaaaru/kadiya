@@ -137,7 +137,7 @@ Message your bot on Telegram -- kadiya replies.
 
 | Skill | What it does |
 |-------|-------------|
-| `web-search` | Search the web (via Brave Search API) |
+| `web-search` | Search the web (DuckDuckGo default, Brave optional) |
 
 ### Inherited from NanoBot
 

@@ -47,7 +47,8 @@ Source: <url>
 - Always cite sources with URLs
 - No emojis
 - If web_search returns no results, say so directly
-- If BRAVE_API_KEY is not set, tell user to configure it
+- Web search works out of the box via DuckDuckGo (no API key needed)
+- If BRAVE_API_KEY is set, Brave Search is used instead for higher quality results
 - Prefer recent results for news queries
 - Do not fabricate URLs or results
 - Bullet points only

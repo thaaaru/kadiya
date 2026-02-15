@@ -10,4 +10,4 @@ outputs:
   - summarized results with source URLs
 stateful: false
 permissions: web-access
-privacy_notes: Search queries are sent to Brave Search API. Fetched URLs are accessed directly.
+privacy_notes: Search queries are sent to DuckDuckGo (default) or Brave Search API (if configured). Fetched URLs are accessed directly.
