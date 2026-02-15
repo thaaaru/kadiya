@@ -3,7 +3,6 @@
   <h1>kadiya</h1>
   <p><strong>A lightweight, cost-first AI assistant for Sri Lanka</strong></p>
   <p>
-    <img src="https://img.shields.io/badge/WhatsApp-ready-25D366?style=flat&logo=whatsapp&logoColor=white" alt="WhatsApp">
     <img src="https://img.shields.io/badge/Telegram-ready-2CA5E0?style=flat&logo=telegram&logoColor=white" alt="Telegram">
     <img src="https://img.shields.io/badge/cost-$0.50--2%2Fmo-brightgreen" alt="Cost">
     <img src="https://img.shields.io/badge/license-MIT-green" alt="License">
@@ -17,7 +16,7 @@
 
 **kadiya** is a fork of [NanoBot](https://github.com/HKUDS/nanobot) optimized for Sri Lanka.
 
-NanoBot is an ultra-lightweight AI assistant (~4,000 lines of core code). kadiya adds a cost-first routing layer, Sinhala/English support, and Sri Lanka-specific skills on top of it — so you get a personal AI assistant that runs on WhatsApp or Telegram for under $2/month.
+NanoBot is an ultra-lightweight AI assistant (~4,000 lines of core code). kadiya adds a cost-first routing layer, Sinhala/English support, and Sri Lanka-specific skills on top of it — so you get a personal AI assistant that runs on Telegram for under $2/month.
 
 ## What we added
 
@@ -26,32 +25,33 @@ NanoBot is an ultra-lightweight AI assistant (~4,000 lines of core code). kadiya
 | Smart model routing | Routes to cheapest model that fits the task | Single model |
 | Token optimization | Prompt compression, conversation summarization | Full context |
 | Sri Lanka locale | Sinhala/English, LKR, Asia/Colombo, Singlish input | Global/CN focus |
-| Sri Lanka skills | Translation, PII redaction, WhatsApp/Telegram formatting | General skills |
-| Office skills | Excel, Word, PowerPoint generation | — |
-| Cost target | $0.50–2/month | Varies |
-| Primary channels | WhatsApp + Telegram | Feishu, DingTalk, QQ, WeChat, etc. |
-| Windows installer | One-click `install.bat` for WSL setup | Manual |
+| Sri Lanka skills | Translation, PII redaction, Telegram formatting | General skills |
+| Office skills | Excel, Word, PowerPoint generation | -- |
+| Cost target | $0.50-2/month | Varies |
+| Primary channel | Telegram | Feishu, DingTalk, QQ, WeChat, etc. |
+| Windows installer | One-click `install.bat` (native, no WSL) | Manual |
 
-Everything else — the agent loop, tools, memory, cron, and all upstream channels — is inherited from NanoBot.
+Everything else -- the agent loop, tools, memory, cron, and all upstream channels -- is inherited from NanoBot.
 
 ## Install
 
-**From source (recommended)**
+**Windows (recommended)**
+
+Download and double-click `install.bat`. It installs Python (if needed), sets up kadiya, runs guided setup, and adds `kadiya` to your PATH.
+
+After install, open any terminal:
+
+```
+kadiya agent -m "Hello!"
+```
+
+**From source (macOS/Linux)**
 
 ```bash
 git clone https://github.com/thaaaru/kadiya.git
 cd kadiya
 pip install -e .
-```
-
-**Windows**
-
-Download and double-click `install.bat` — it sets up WSL, Ubuntu, and kadiya automatically.
-
-**With uv**
-
-```bash
-uv tool install nanobot-ai
+kadiya onboard
 ```
 
 ## Quick start
@@ -59,79 +59,33 @@ uv tool install nanobot-ai
 **1. Initialize**
 
 ```bash
-nanobot onboard
+kadiya onboard
 ```
 
-**2. Configure** (`~/.nanobot/config.json`)
+The guided setup will ask you to:
+- Choose a provider (DeepSeek, OpenAI, or OpenRouter)
+- Enter your API key
+- Optionally configure Telegram
 
-```json
-{
-  "providers": {
-    "openrouter": {
-      "apiKey": "sk-or-v1-xxx"
-    }
-  },
-  "agents": {
-    "defaults": {
-      "model": "deepseek/deepseek-chat"
-    }
-  }
-}
-```
-
-> Get an API key from [OpenRouter](https://openrouter.ai/keys) (recommended) or [DeepSeek](https://platform.deepseek.com) directly.
-
-**3. Chat**
+**2. Chat**
 
 ```bash
-nanobot agent -m "What is 2+2?"
+kadiya agent -m "What is 2+2?"
 ```
 
-**4. Interactive mode**
+**3. Interactive mode**
 
 ```bash
-nanobot agent
+kadiya agent
 ```
 
-Exit with `exit`, `quit`, `Ctrl+D`, or `:q`.
+Exit with `exit`, `quit`, `Ctrl+C`, or `:q`.
 
-## WhatsApp setup
-
-Sri Lanka's most-used messaging app. kadiya connects via linked device — no business API needed.
-
-**Requirements:** Node.js >= 18
-
-**1. Link your device**
+**4. Diagnostics**
 
 ```bash
-nanobot channels login
-# Scan the QR code with WhatsApp > Settings > Linked Devices
+kadiya doctor
 ```
-
-**2. Configure**
-
-```json
-{
-  "channels": {
-    "whatsapp": {
-      "enabled": true,
-      "allowFrom": ["+94771234567"]
-    }
-  }
-}
-```
-
-**3. Run** (two terminals)
-
-```bash
-# Terminal 1 — keep the WhatsApp bridge running
-nanobot channels login
-
-# Terminal 2 — start the gateway
-nanobot gateway
-```
-
-Send a message to yourself on WhatsApp — kadiya replies.
 
 ## Telegram setup
 
@@ -139,29 +93,25 @@ Send a message to yourself on WhatsApp — kadiya replies.
 
 - Open Telegram, search `@BotFather`
 - Send `/newbot`, follow the prompts
-- Copy the token
+- Copy the bot token
 
-**2. Configure**
-
-```json
-{
-  "channels": {
-    "telegram": {
-      "enabled": true,
-      "token": "YOUR_BOT_TOKEN",
-      "allowFrom": ["YOUR_USER_ID"]
-    }
-  }
-}
-```
-
-**3. Run**
+**2. Run onboard** (or edit `~/.nanobot/config.json` manually)
 
 ```bash
-nanobot gateway
+kadiya onboard
 ```
 
-> Other channels (Discord, Slack, Email, Feishu, DingTalk, QQ) are available via upstream NanoBot — see the [NanoBot README](https://github.com/HKUDS/nanobot#-chat-apps) for setup.
+Select your provider, enter your API key, then answer **y** to "Enable Telegram bot?" and paste your token.
+
+**3. Start the gateway**
+
+```bash
+kadiya gateway
+```
+
+Message your bot on Telegram -- kadiya replies.
+
+> Other channels (Discord, Slack, Email, Feishu, DingTalk, QQ) are available via upstream NanoBot -- see the [NanoBot README](https://github.com/HKUDS/nanobot#-chat-apps) for setup.
 
 ## Skills
 
@@ -170,7 +120,6 @@ nanobot gateway
 | Skill | What it does |
 |-------|-------------|
 | `sl-translate` | Sinhala/English translation with formal/informal tone |
-| `sl-whatsapp` | WhatsApp-friendly formatting |
 | `sl-telegram` | Telegram-friendly formatting |
 | `sl-summarize` | Concise summaries optimized for mobile |
 | `sl-pii-redact` | Redact personal information from text |
@@ -191,7 +140,7 @@ nanobot gateway
 
 ### Inherited from NanoBot
 
-GitHub integration, weather, cron/scheduling, memory, tmux, and the skill creator. See `nanobot/skills/` for the full list.
+GitHub integration, weather, cron/scheduling, memory, and the skill creator. See `nanobot/skills/` for the full list.
 
 ## Cost
 
@@ -203,7 +152,7 @@ kadiya is designed to cost under $2/month for typical personal use.
 | Token compression | Strips unnecessary tokens from prompts |
 | Conversation summarization | Summarizes after 5 turns instead of sending full history |
 | Lower defaults | `max_tokens: 2048`, `max_tool_iterations: 10`, `memory_window: 30` |
-| Escalation only when needed | Falls back to Claude Haiku or GPT-4o-mini only for structured/complex tasks |
+| Escalation only when needed | Falls back to GPT-4o-mini only for structured/complex tasks |
 
 **Comparison:**
 
@@ -211,8 +160,8 @@ kadiya is designed to cost under $2/month for typical personal use.
 |---------|-------------|
 | ChatGPT Plus | $20 |
 | Claude Pro | $20 |
-| Typical API usage (GPT-4o) | $10–50+ |
-| **kadiya** | **$0.50–2** |
+| Typical API usage (GPT-4o) | $10-50+ |
+| **kadiya** | **$0.50-2** |
 
 ## Configuration
 
@@ -220,36 +169,15 @@ kadiya is designed to cost under $2/month for typical personal use.
 
 | Provider | Purpose | Get API key |
 |----------|---------|-------------|
-| `openrouter` | LLM (recommended, access to all models) | [openrouter.ai](https://openrouter.ai) |
-| `deepseek` | LLM (cheapest for general tasks) | [platform.deepseek.com](https://platform.deepseek.com) |
+| `deepseek` | LLM (cheapest, recommended) | [platform.deepseek.com](https://platform.deepseek.com) |
+| `openai` | LLM (GPT-3.5-turbo / GPT-4o-mini) | [platform.openai.com](https://platform.openai.com) |
+| `openrouter` | LLM (multi-provider gateway) | [openrouter.ai](https://openrouter.ai) |
 | `anthropic` | LLM (Claude direct) | [console.anthropic.com](https://console.anthropic.com) |
-| `openai` | LLM (GPT direct) | [platform.openai.com](https://platform.openai.com) |
 | `groq` | LLM + voice transcription (Whisper, free) | [console.groq.com](https://console.groq.com) |
 | `gemini` | LLM (Gemini direct) | [aistudio.google.com](https://aistudio.google.com) |
-| `vllm` | LLM (local, any OpenAI-compatible server) | — |
+| `vllm` | LLM (local, any OpenAI-compatible server) | -- |
 
 > All providers from upstream NanoBot are supported. See the [full provider list](https://github.com/HKUDS/nanobot#providers).
-
-### kadiya profile
-
-Set the `KADIYA_PROFILE` environment variable to load the Sri Lanka profile:
-
-```bash
-export KADIYA_PROFILE=sl
-```
-
-Or pass the config file directly:
-
-```bash
-nanobot agent --config configs/kadiya-sl.yaml -m "hello"
-```
-
-The `kadiya-sl.yaml` config sets:
-- Default model: `deepseek/deepseek-chat`
-- Timezone: `Asia/Colombo`
-- Languages: Sinhala + English (Singlish accepted)
-- Token limits tuned for cost
-- Routing tiers: cheap_general → structured → fallback → sensitive
 
 ### Security
 
@@ -258,35 +186,19 @@ The `kadiya-sl.yaml` config sets:
 | `tools.restrictToWorkspace` | `false` | Sandbox agent to workspace directory |
 | `channels.*.allowFrom` | `[]` | Whitelist user IDs (empty = allow all) |
 
-## Docker
-
-```bash
-# Build
-docker build -t kadiya .
-
-# Initialize (first time)
-docker run -v ~/.nanobot:/root/.nanobot --rm kadiya onboard
-
-# Run gateway
-docker run -v ~/.nanobot:/root/.nanobot -p 18790:18790 kadiya gateway
-
-# Single command
-docker run -v ~/.nanobot:/root/.nanobot --rm kadiya agent -m "Hello!"
-```
-
 ## CLI reference
 
 | Command | Description |
 |---------|-------------|
-| `nanobot onboard` | Initialize config and workspace |
-| `nanobot agent -m "..."` | Send a message |
-| `nanobot agent` | Interactive chat |
-| `nanobot gateway` | Start the gateway (WhatsApp, Telegram, etc.) |
-| `nanobot channels login` | Link WhatsApp (scan QR) |
-| `nanobot channels status` | Show channel status |
-| `nanobot status` | Show system status |
-| `nanobot cron add` | Add a scheduled task |
-| `nanobot cron list` | List scheduled tasks |
+| `kadiya onboard` | Guided setup (provider, API key, Telegram) |
+| `kadiya agent -m "..."` | Send a message |
+| `kadiya agent` | Interactive chat |
+| `kadiya gateway` | Start the gateway (Telegram, etc.) |
+| `kadiya channels status` | Show channel status |
+| `kadiya status` | Show system status |
+| `kadiya doctor` | Run diagnostics |
+| `kadiya cron add` | Add a scheduled task |
+| `kadiya cron list` | List scheduled tasks |
 
 ## Project structure
 
@@ -297,18 +209,19 @@ kadiya/
 │   ├── router.py        #   Smart model routing
 │   ├── optimizer.py     #   Token optimization
 │   └── provider.py      #   Cost-first provider wrapper
+├── skills/              # kadiya skills
+│   ├── sl/              #   Sri Lanka (translate, telegram, summarize, pii-redact)
+│   ├── office/          #   Office (excel, word, pptx)
+│   └── web/             #   Web (search)
 ├── configs/
 │   └── kadiya-sl.yaml   #   Sri Lanka configuration
-├── profiles/
-│   └── sl/              #   Sri Lanka profile
-│       ├── profile.yaml
-│       └── prompts.yaml
 ├── install.bat          # Windows installer launcher
-├── install.ps1          # Windows installer (PowerShell)
-└── nanobot/             # Upstream NanoBot (unmodified)
-    ├── agent/           #   Core agent logic
-    ├── skills/          #   Bundled skills
-    ├── channels/        #   Chat integrations
+├── install.ps1          # Windows installer (native, no WSL)
+├── kadiya.bat           # Windows launcher
+└── nanobot/             # Upstream NanoBot engine
+    ├── agent/           #   Core agent logic + skills loader
+    ├── skills/          #   Built-in skills (memory, cron, weather, etc.)
+    ├── channels/        #   Chat integrations (Telegram, Discord, Slack, etc.)
     ├── providers/       #   LLM providers
     ├── bus/             #   Message routing
     ├── cron/            #   Scheduled tasks
@@ -320,7 +233,7 @@ kadiya/
 
 kadiya is built on [NanoBot](https://github.com/HKUDS/nanobot) by [HKUDS](https://github.com/HKUDS). All credit for the core agent, tools, channels, and architecture goes to the NanoBot team.
 
-If you need channels beyond WhatsApp and Telegram (Feishu, DingTalk, QQ, Discord, Slack, Email, Mochat), or want the full documentation, see the [NanoBot repository](https://github.com/HKUDS/nanobot).
+If you need channels beyond Telegram (Feishu, DingTalk, QQ, Discord, Slack, Email, Mochat), or want the full documentation, see the [NanoBot repository](https://github.com/HKUDS/nanobot).
 
 ## License
 
