@@ -726,7 +726,20 @@ def gateway(
         logging.basicConfig(level=logging.DEBUG)
     
     console.print(f"{__logo__} Starting kadiya gateway on port {port}...")
-    
+
+    # Check for updates (best-effort, never blocks startup)
+    from kadiya.updater import check_for_updates_sync
+    result = check_for_updates_sync()
+    if result and result.update_available:
+        from rich.panel import Panel
+        console.print(Panel(
+            f"[bold yellow]Update available:[/bold yellow] {result.current_version} → [green]{result.latest_version}[/green]\n"
+            f"Run: [cyan]pip install --upgrade kadiya[/cyan]\n"
+            f"{result.release_url}",
+            title="[bold]New version[/bold]",
+            border_style="yellow",
+        ))
+
     config = load_config()
     bus = MessageBus()
     provider = _make_provider(config)
