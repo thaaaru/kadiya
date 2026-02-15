@@ -1,0 +1,82 @@
+# Sri Lanka Profile
+# Default locale and behavior settings for Sri Lankan users
+
+name: sl
+description: Sri Lanka profile with Sinhala/English bilingual support
+version: "1.0.0"
+
+# Regional settings
+locale:
+  timezone: Asia/Colombo
+  currency: LKR
+  currency_symbol: Rs.
+  units: metric
+  date_format: "%Y-%m-%d"
+  time_format: "%H:%M"
+  datetime_format: "%Y-%m-%d %H:%M"
+
+# Language settings
+languages:
+  primary: si  # Sinhala
+  secondary: en  # English
+  allow_singlish: true  # Mixed Sinhala-English input
+  script: sinhala  # For Sinhala text rendering
+
+# Output preferences
+output:
+  # Only produce bilingual output when explicitly requested
+  bilingual: false
+  # Prefer Sinhala for local contexts, English for technical
+  auto_language: true
+  # Maximum response length (characters)
+  max_length: 2000
+
+# Tone configuration
+tone:
+  # Keep responses short and practical
+  verbosity: low
+  # Professional but friendly
+  style: concise
+  # Avoid overly formal language
+  formality: medium
+  # WhatsApp/Telegram friendly formatting
+  mobile_friendly: true
+
+# Common Sri Lankan context
+context:
+  # Public holidays (for date awareness)
+  holidays:
+    - name: Sinhala and Tamil New Year
+      date: "04-14"
+    - name: Vesak
+      date: "05-full-moon"
+    - name: Independence Day
+      date: "02-04"
+
+  # Major cities (for location awareness)
+  cities:
+    - Colombo
+    - Kandy
+    - Galle
+    - Jaffna
+    - Negombo
+    - Batticaloa
+    - Trincomalee
+
+  # Currency conversion hints
+  common_currencies:
+    - USD
+    - EUR
+    - GBP
+    - INR
+    - AED
+
+# System prompt injection (appended to base prompt)
+system_prompt_suffix: |
+  You are operating in Sri Lanka context.
+  - Timezone: Asia/Colombo (IST/UTC+5:30)
+  - Currency: LKR (Sri Lankan Rupee)
+  - Languages: Sinhala and English
+  - Accept Singlish (mixed Sinhala-English) input naturally
+  - Keep responses concise and mobile-friendly
+  - Use metric units

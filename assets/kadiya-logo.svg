@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" fill="none">
+  <!-- Background -->
+  <rect width="400" height="120" rx="12" fill="#1A1A2E"/>
+
+  <!-- Warm accent line (Sri Lankan gold) -->
+  <rect x="24" y="20" width="4" height="80" rx="2" fill="#E8A838"/>
+
+  <!-- Logo mark: stylized K with Sri Lankan warmth -->
+  <text x="44" y="78" font-family="system-ui, -apple-system, sans-serif" font-size="56" font-weight="700" fill="#F5F5F0">
+    kadiya
+  </text>
+
+  <!-- Tagline -->
+  <text x="44" y="100" font-family="system-ui, -apple-system, sans-serif" font-size="14" fill="#9E9E9E" letter-spacing="2">
+    SMART BOT FOR SRI LANKA
+  </text>
+
+  <!-- Sri Lankan accent dot -->
+  <circle cx="370" cy="60" r="8" fill="#E8A838" opacity="0.8"/>
+  <circle cx="370" cy="60" r="4" fill="#F5F5F0"/>
+</svg>
