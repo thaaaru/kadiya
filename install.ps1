@@ -137,8 +137,23 @@ if (-not $pythonExe) {
 Write-Step "Setting up Python environment"
 
 # Determine project directory (where this script lives)
+# When piped via `irm | iex`, $MyInvocation.MyCommand.Path is null,
+# so clone the repo to a local directory first.
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-if (-not $scriptDir) { $scriptDir = Get-Location }
+if (-not $scriptDir) {
+    $installDir = Join-Path $env:USERPROFILE "kadiya"
+    if (Test-Path (Join-Path $installDir "pyproject.toml")) {
+        Write-Info "Existing kadiya found at $installDir, pulling latest..."
+        git -C $installDir pull -q 2>&1 | Out-Null
+    } else {
+        Write-Info "Cloning kadiya to $installDir..."
+        git clone -q https://github.com/thaaaru/kadiya.git $installDir
+        if ($LASTEXITCODE -ne 0) {
+            Write-Fail "Failed to clone kadiya. Make sure git is installed."
+        }
+    }
+    $scriptDir = $installDir
+}
 
 $venvDir = Join-Path $scriptDir ".venv"
 
