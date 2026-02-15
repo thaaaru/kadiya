@@ -52,6 +52,19 @@ app = typer.Typer(
 console = Console(legacy_windows=False)
 EXIT_COMMANDS = {"exit", "quit", "/exit", "/quit", ":q"}
 
+# Git Bash (MSYS) auto-converts /slash args to Windows paths, e.g. /help -> C:/Program Files/Git/help.
+# This regex detects and reverses that mangling for slash commands.
+import re
+_MSYS_PATH_RE = re.compile(r"^[A-Za-z]:[/\\].*?[/\\](new|help|remind|task|note|brief|rewrite|script|follow|contact|bill|time)$", re.IGNORECASE)
+
+
+def _fix_msys_path(text: str) -> str:
+    """Reverse MSYS/Git Bash path expansion on slash commands."""
+    m = _MSYS_PATH_RE.match(text.strip())
+    if m:
+        return f"/{m.group(1)}"
+    return text
+
 # ---------------------------------------------------------------------------
 # CLI input: prompt_toolkit for editing, paste, history, and display
 # ---------------------------------------------------------------------------
@@ -175,6 +188,45 @@ def main(
 # ============================================================================
 
 
+def _detect_provider(api_key: str) -> str:
+    """Detect LLM provider from API key pattern.
+
+    Supported patterns:
+        sk-ant-...          -> anthropic
+        sk-or-...           -> openrouter
+        sk-proj-...         -> openai
+        sk-... (>60 chars)  -> openai
+        sk-... (short)      -> deepseek
+        gsk_...             -> groq
+        AIza...             -> gemini
+        anything else       -> deepseek (cheapest fallback)
+    """
+    key = api_key.strip()
+    # Anthropic keys: sk-ant-api03-...
+    if key.startswith("sk-ant-"):
+        return "anthropic"
+    # OpenRouter keys: sk-or-v1-... or sk-or-...
+    if key.startswith("sk-or-"):
+        return "openrouter"
+    # Groq keys: gsk_...
+    if key.startswith("gsk_"):
+        return "groq"
+    # Gemini (Google AI Studio) keys: AIza...
+    if key.startswith("AIza"):
+        return "gemini"
+    # OpenAI keys: sk-proj-... (project keys, 100+ chars)
+    if key.startswith("sk-proj-"):
+        return "openai"
+    # OpenAI org/user keys are typically longer than DeepSeek keys
+    if key.startswith("sk-") and len(key) > 60:
+        return "openai"
+    # DeepSeek keys: sk-... (shorter, typically 32-50 chars)
+    if key.startswith("sk-"):
+        return "deepseek"
+    # Fallback: assume DeepSeek (cheapest)
+    return "deepseek"
+
+
 @app.command()
 def onboard():
     """Interactive setup: configure provider, API key, workspace, and channels."""
@@ -197,55 +249,55 @@ def onboard():
         config = Config()
         console.print("[dim]  Creating new configuration...[/dim]")
 
-    # --- 2. Provider selection ---
-    console.print()
-    console.print("[bold]Select your LLM provider:[/bold]")
-    console.print()
-    console.print("  [bold]1[/bold]) DeepSeek        [dim](cheapest, recommended for kadiya)[/dim]")
-    console.print("  [bold]2[/bold]) OpenAI           [dim](GPT-3.5-turbo / GPT-4o-mini)[/dim]")
-    console.print("  [bold]3[/bold]) OpenRouter       [dim](multi-provider gateway)[/dim]")
-    console.print()
-
-    provider_choice = ""
-    while provider_choice not in ("1", "2", "3"):
-        provider_choice = typer.prompt("  Choose [1-3]", default="1").strip()
-        if provider_choice not in ("1", "2", "3"):
-            console.print("  [yellow]Please enter 1, 2, or 3[/yellow]")
-
-    # Map choice to config
+    # --- 2. API key (ask first, detect provider from key) ---
     PROVIDER_MAP = {
-        "1": {
+        "deepseek": {
             "name": "deepseek",
             "label": "DeepSeek",
             "model": "deepseek/deepseek-chat",
             "structured_model": "deepseek/deepseek-chat",
-            "key_hint": "https://platform.deepseek.com/api_keys",
             "api_base": "https://api.deepseek.com",
         },
-        "2": {
+        "openai": {
             "name": "openai",
             "label": "OpenAI",
-            "model": "gpt-3.5-turbo",
-            "structured_model": "gpt-3.5-turbo",
-            "key_hint": "https://platform.openai.com/api-keys",
+            "model": "gpt-4o-mini",
+            "structured_model": "gpt-4o-mini",
             "api_base": None,
         },
-        "3": {
+        "anthropic": {
+            "name": "anthropic",
+            "label": "Anthropic",
+            "model": "anthropic/claude-sonnet-4-5-20250929",
+            "structured_model": "anthropic/claude-sonnet-4-5-20250929",
+            "api_base": None,
+        },
+        "groq": {
+            "name": "groq",
+            "label": "Groq",
+            "model": "groq/llama-3.1-8b-instant",
+            "structured_model": "groq/llama-3.1-8b-instant",
+            "api_base": None,
+        },
+        "gemini": {
+            "name": "gemini",
+            "label": "Gemini",
+            "model": "gemini/gemini-2.0-flash",
+            "structured_model": "gemini/gemini-2.0-flash",
+            "api_base": None,
+        },
+        "openrouter": {
             "name": "openrouter",
             "label": "OpenRouter",
             "model": "deepseek/deepseek-chat",
             "structured_model": "deepseek/deepseek-chat",
-            "key_hint": "https://openrouter.ai/keys",
             "api_base": None,
         },
     }
 
-    prov = PROVIDER_MAP[provider_choice]
-    console.print(f"[green]✓[/green] Selected: {prov['label']}")
-
-    # --- 3. API key ---
     console.print()
-    console.print(f"  [dim]Get your API key from: {prov['key_hint']}[/dim]")
+    console.print("[bold]Paste your API key:[/bold]")
+    console.print("[dim]  Auto-detects: DeepSeek, OpenAI, Anthropic, Groq, Gemini, OpenRouter[/dim]")
     console.print()
 
     api_key = ""
@@ -254,7 +306,10 @@ def onboard():
         if not api_key:
             console.print("  [yellow]API key cannot be empty.[/yellow]")
 
-    console.print(f"[green]✓[/green] API key received ({len(api_key)} chars)")
+    # Auto-detect provider from key pattern
+    detected = _detect_provider(api_key)
+    prov = PROVIDER_MAP[detected]
+    console.print(f"[green]✓[/green] Detected provider: {prov['label']} ({len(api_key)} chars)")
 
     # Set the provider's API key in config
     provider_config = getattr(config.providers, prov["name"])
@@ -464,14 +519,16 @@ logging:
 
 skills:
   enabled:
-    - sl-translate
-    - sl-telegram
-    - sl-summarize
-    - sl-pii-redact
-    - office-excel
-    - office-word
-    - office-pptx
-    - web-search
+    - productivity-reminder
+    - productivity-task-lite
+    - productivity-follow-up
+    - productivity-time-helper
+    - personal-notes
+    - personal-daily-brief
+    - personal-contact-memory
+    - communication-message-rewrite
+    - communication-call-script
+    - finance-bill-helper
 
 tools:
   restrict_to_workspace: true
@@ -504,19 +561,19 @@ You are a helpful AI assistant. Be concise, accurate, and friendly.
 """,
         "SOUL.md": """# Soul
 
-I am kadiya, a lightweight AI assistant.
+I am kadiya, a personal AI assistant for Sri Lanka.
 
 ## Personality
 
-- Helpful and friendly
-- Concise and to the point
-- Curious and eager to learn
+- Concise and direct
+- Polite but not wordy
+- Helpful, no fluff
 
 ## Values
 
+- Privacy first - all data stays local
+- Cost first - minimal token usage
 - Accuracy over speed
-- User privacy and safety
-- Transparency in actions
 """,
         "USER.md": """# User
 
@@ -579,6 +636,25 @@ def _install_kadiya_skills(skills_dir: Path):
     if not project_skills.exists():
         return
 
+    # Build set of valid skill names from project
+    valid_skills: set[str] = set()
+    for category_dir in sorted(project_skills.iterdir()):
+        if not category_dir.is_dir():
+            continue
+        for skill_dir in sorted(category_dir.iterdir()):
+            if not skill_dir.is_dir():
+                continue
+            if (skill_dir / "SKILL.md").exists():
+                valid_skills.add(f"{category_dir.name}-{skill_dir.name}")
+
+    # Remove workspace skills that are no longer in the project
+    if skills_dir.exists():
+        for existing in list(skills_dir.iterdir()):
+            if existing.is_dir() and existing.name not in valid_skills:
+                shutil.rmtree(existing)
+                console.print(f"  [dim]Removed old skill: {existing.name}[/dim]")
+
+    # Install/update skills
     installed = 0
     for category_dir in sorted(project_skills.iterdir()):
         if not category_dir.is_dir():
@@ -590,13 +666,13 @@ def _install_kadiya_skills(skills_dir: Path):
             if not skill_file.exists():
                 continue
 
-            # Flatten: office/excel -> office-excel, sl/translate -> sl-translate
             flat_name = f"{category_dir.name}-{skill_dir.name}"
             dest_dir = skills_dir / flat_name
-            if dest_dir.exists():
-                continue
 
-            # Copy the entire skill directory (SKILL.md + any scripts/assets)
+            # Replace existing to keep skills up to date
+            if dest_dir.exists():
+                shutil.rmtree(dest_dir)
+
             shutil.copytree(skill_dir, dest_dir)
             console.print(f"  [dim]Installed skill: {flat_name}[/dim]")
             installed += 1
@@ -793,10 +869,11 @@ def agent(
     if message:
         # Single message mode
         async def run_once():
+            msg = _fix_msys_path(message)
             with _thinking_ctx():
-                response = await agent_loop.process_direct(message, session_id)
+                response = await agent_loop.process_direct(msg, session_id)
             _print_agent_response(response, render_markdown=markdown)
-        
+
         asyncio.run(run_once())
     else:
         # Interactive mode
@@ -825,7 +902,7 @@ def agent(
                         break
                     
                     with _thinking_ctx():
-                        response = await agent_loop.process_direct(user_input, session_id)
+                        response = await agent_loop.process_direct(_fix_msys_path(user_input), session_id)
                     _print_agent_response(response, render_markdown=markdown)
                 except KeyboardInterrupt:
                     _restore_terminal()

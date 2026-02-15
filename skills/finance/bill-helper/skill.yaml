@@ -1,0 +1,18 @@
+name: bill-helper
+description: Track bills, expenses, and simple budgeting. LKR currency, local storage.
+commands:
+  - /bill <amount> <description>
+  - /bill list
+  - /bill summary
+  - /bill due <description> <date>
+inputs:
+  - expense amount
+  - description
+  - optional due date
+outputs:
+  - confirmation
+  - expense list
+  - monthly summary
+stateful: true
+permissions: personal-data
+privacy_notes: Financial data stored locally in workspace memory. Never shared externally.

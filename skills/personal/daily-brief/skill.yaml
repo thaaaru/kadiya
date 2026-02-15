@@ -1,0 +1,12 @@
+name: daily-brief
+description: Daily overview of tasks, reminders, follow-ups, and notes. Critical retention feature.
+commands:
+  - /brief
+  - /brief tomorrow
+inputs:
+  - optional "tomorrow" modifier
+outputs:
+  - structured daily overview
+stateful: true
+permissions: personal-data
+privacy_notes: Reads from local memory only. Never shared externally.

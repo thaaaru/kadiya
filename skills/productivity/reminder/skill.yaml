@@ -1,0 +1,16 @@
+name: reminder
+description: Smart reminders with natural language, one-time and recurring, Asia/Colombo timezone
+commands:
+  - /remind <text> on <date/time>
+  - /remind every <pattern> <text>
+  - /reminders
+  - /remind cancel <id>
+inputs:
+  - natural language reminder text
+  - date/time expression
+outputs:
+  - confirmation with scheduled time
+  - reminder list
+stateful: true
+permissions: personal-data
+privacy_notes: Reminders stored locally in workspace memory. Never shared externally.

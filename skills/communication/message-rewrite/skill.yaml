@@ -1,0 +1,16 @@
+name: message-rewrite
+description: Rewrite messages in different tones - polite, formal, casual. Sinhala/English/Singlish support.
+commands:
+  - /rewrite polite <text>
+  - /rewrite formal <text>
+  - /rewrite casual <text>
+  - /rewrite formal sinhala <text>
+inputs:
+  - message text
+  - tone (polite, formal, casual)
+  - optional language (sinhala, english)
+outputs:
+  - rewritten message
+stateful: false
+permissions: none
+privacy_notes: Input text is processed by the LLM and not stored.

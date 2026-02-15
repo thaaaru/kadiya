@@ -1,0 +1,16 @@
+name: contact-memory
+description: Remember key details about contacts. Lightweight personal CRM.
+commands:
+  - /contact <name> <detail>
+  - /contact <name>
+  - /contact list
+inputs:
+  - contact name
+  - optional detail to save
+outputs:
+  - confirmation
+  - contact details
+  - contact list
+stateful: true
+permissions: personal-data
+privacy_notes: Contact details stored locally in workspace memory. Never shared externally.

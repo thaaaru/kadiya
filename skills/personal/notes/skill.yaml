@@ -1,0 +1,16 @@
+name: notes
+description: Short notes - taggable, searchable, stored via structured memory
+commands:
+  - /note <content>
+  - /notes
+  - /notes <tag>
+  - /forget last
+inputs:
+  - note content
+  - optional tags (auto-detected or explicit)
+outputs:
+  - confirmation
+  - note list
+stateful: true
+permissions: personal-data
+privacy_notes: Notes stored locally in workspace memory. Never shared externally.

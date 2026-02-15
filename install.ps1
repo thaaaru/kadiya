@@ -47,8 +47,11 @@ function Write-Info($msg)  { Write-Host "  [info] $msg" -ForegroundColor Blue }
 # --- Banner -----------------------------------------------------------------
 Write-Host ""
 Write-Host "  kadiya installer (Windows)" -ForegroundColor Cyan
-Write-Host "  Smart bot for Sri Lanka" -ForegroundColor Cyan
-Write-Host "  Native Windows install" -ForegroundColor DarkGray
+Write-Host "  Personal AI assistant for Sri Lanka" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "  Supported providers:" -ForegroundColor DarkGray
+Write-Host "    DeepSeek, OpenAI, Anthropic, Groq, Gemini, OpenRouter" -ForegroundColor DarkGray
+Write-Host "  Just paste your API key - kadiya detects the provider." -ForegroundColor DarkGray
 Write-Host ""
 
 # ============================================================================
@@ -129,26 +132,7 @@ if (-not $pythonExe) {
 }
 
 # ============================================================================
-# 2. CHECK NODE.JS (optional, for WhatsApp bridge)
-# ============================================================================
-Write-Step "Checking Node.js"
-
-$hasNode = $false
-try {
-    $nodeVer = & node --version 2>&1
-    if ($LASTEXITCODE -eq 0) {
-        $hasNode = $true
-        Write-Ok "Node.js found: $nodeVer"
-    }
-} catch {}
-
-if (-not $hasNode) {
-    Write-Warn "Node.js not found (optional, needed for WhatsApp bridge)"
-    Write-Info "Install later from: https://nodejs.org/"
-}
-
-# ============================================================================
-# 3. CREATE VIRTUAL ENVIRONMENT
+# 2. CREATE VIRTUAL ENVIRONMENT
 # ============================================================================
 Write-Step "Setting up Python environment"
 
@@ -173,7 +157,7 @@ $venvPython = Join-Path $venvDir "Scripts\python.exe"
 $venvPip = Join-Path $venvDir "Scripts\pip.exe"
 
 # ============================================================================
-# 4. INSTALL DEPENDENCIES
+# 3. INSTALL DEPENDENCIES
 # ============================================================================
 Write-Step "Installing dependencies"
 
@@ -206,7 +190,7 @@ $ErrorActionPreference = "Stop"
 Write-Ok "All dependencies installed"
 
 # ============================================================================
-# 5. RUN GUIDED SETUP (kadiya onboard)
+# 4. RUN GUIDED SETUP (kadiya onboard)
 # ============================================================================
 Write-Step "Starting guided setup"
 
@@ -229,7 +213,7 @@ if (Test-Path $kadiyaExe) {
 }
 
 # ============================================================================
-# 6. ADD TO PATH
+# 5. ADD TO PATH
 # ============================================================================
 Write-Step "Adding kadiya to PATH"
 
@@ -247,7 +231,7 @@ if ($userPath -and $userPath.Split(";") -contains $scriptsDir) {
 }
 
 # ============================================================================
-# 7. COMPLETION
+# 6. DONE
 # ============================================================================
 Write-Host ""
 

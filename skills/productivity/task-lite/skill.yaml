@@ -1,0 +1,16 @@
+name: task-lite
+description: Simple task manager - add, list, complete tasks with today view
+commands:
+  - /task add <title>
+  - /task today
+  - /task done <id or title>
+  - /tasks
+inputs:
+  - task title
+  - optional due date
+outputs:
+  - task confirmation
+  - task list
+stateful: true
+permissions: personal-data
+privacy_notes: Tasks stored locally in workspace memory. Never shared externally.

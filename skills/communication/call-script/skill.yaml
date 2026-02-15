@@ -1,0 +1,14 @@
+name: call-script
+description: Pre-written scripts for common calls and messages. Sri Lankan context with bilingual support.
+commands:
+  - /script call <situation>
+  - /script message <situation>
+  - /script complaint <service>
+inputs:
+  - situation or service name
+  - script type (call, message, complaint)
+outputs:
+  - ready-to-use script or message template
+stateful: false
+permissions: none
+privacy_notes: Input text is processed by the LLM and not stored.

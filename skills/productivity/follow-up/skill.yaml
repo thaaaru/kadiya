@@ -1,0 +1,15 @@
+name: follow-up
+description: Track things you're waiting on from others. Auto-remind after 3 days.
+commands:
+  - /follow <person> <topic>
+  - /follow list
+  - /follow done <id>
+inputs:
+  - person name
+  - topic description
+outputs:
+  - confirmation
+  - follow-up list
+stateful: true
+permissions: personal-data
+privacy_notes: Follow-ups stored locally in workspace memory. Never shared externally.

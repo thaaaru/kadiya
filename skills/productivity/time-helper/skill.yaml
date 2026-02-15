@@ -1,0 +1,17 @@
+name: time-helper
+description: Time conversions, planning, and scheduling. Default timezone Asia/Colombo.
+commands:
+  - /time <city>
+  - /time plan <event> <duration>
+  - /time convert <time> <from_tz> to <to_tz>
+inputs:
+  - city name or timezone
+  - optional event details
+  - optional time and timezone pair
+outputs:
+  - formatted time display
+  - timezone conversion
+  - meeting time suggestions
+stateful: false
+permissions: none
+privacy_notes: No data stored. Time calculations are performed in real-time.
