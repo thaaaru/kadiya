@@ -1,6 +1,6 @@
 <div align="center">
 
-  <h1>kadiya</h1>
+  <h1>🐜 kadiya</h1>
   <p><strong>A lightweight, cost-first AI assistant for Sri Lanka</strong></p>
   <p>
     <img src="https://img.shields.io/badge/Telegram-ready-2CA5E0?style=flat&logo=telegram&logoColor=white" alt="Telegram">
