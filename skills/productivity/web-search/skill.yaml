@@ -1,0 +1,13 @@
+name: web-search
+description: Search the web and summarize results. Uses web_search and web_fetch tools.
+commands:
+  - /search <query>
+  - /search news <topic>
+  - /fetch <url>
+inputs:
+  - search query or URL
+outputs:
+  - summarized results with source URLs
+stateful: false
+permissions: web-access
+privacy_notes: Search queries are sent to Brave Search API. Fetched URLs are accessed directly.

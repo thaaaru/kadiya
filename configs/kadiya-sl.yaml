@@ -96,6 +96,8 @@ skills:
     - communication-message-rewrite
     - communication-call-script
     - finance-bill-helper
+    - productivity-web-search
+    - productivity-whatis
 
 tools:
   restrict_to_workspace: true

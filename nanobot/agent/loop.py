@@ -258,7 +258,7 @@ class AgentLoop:
                                   content="New session started. Memory consolidation in progress.")
         if cmd == "/help":
             return OutboundMessage(channel=msg.channel, chat_id=msg.chat_id,
-                                  content="kadiya commands:\n/new - New conversation\n/help - Show this\n/remind - Set reminders\n/task - Manage tasks\n/note - Save notes\n/brief - Daily overview\n/rewrite - Rewrite messages\n/script - Call/message scripts\n/follow - Track follow-ups\n/contact - Contact memory\n/bill - Track expenses\n/time - Time tools")
+                                  content="kadiya commands:\n/new - New conversation\n/help - Show this\n/remind - Set reminders\n/task - Manage tasks\n/note - Save notes\n/brief - Daily overview\n/rewrite - Rewrite messages\n/script - Call/message scripts\n/follow - Track follow-ups\n/contact - Contact memory\n/bill - Track expenses\n/time - Time tools\n/search - Web search\n/whatis - Explain a term")
         
         if len(session.messages) > self.memory_window:
             asyncio.create_task(self._consolidate_memory(session))

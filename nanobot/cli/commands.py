@@ -55,7 +55,7 @@ EXIT_COMMANDS = {"exit", "quit", "/exit", "/quit", ":q"}
 # Git Bash (MSYS) auto-converts /slash args to Windows paths, e.g. /help -> C:/Program Files/Git/help.
 # This regex detects and reverses that mangling for slash commands.
 import re
-_MSYS_PATH_RE = re.compile(r"^[A-Za-z]:[/\\].*?[/\\](new|help|remind|task|note|brief|rewrite|script|follow|contact|bill|time)$", re.IGNORECASE)
+_MSYS_PATH_RE = re.compile(r"^[A-Za-z]:[/\\].*?[/\\](new|help|remind|task|note|brief|rewrite|script|follow|contact|bill|time|search|fetch|whatis|define)$", re.IGNORECASE)
 
 
 def _fix_msys_path(text: str) -> str:
@@ -529,6 +529,8 @@ skills:
     - communication-message-rewrite
     - communication-call-script
     - finance-bill-helper
+    - productivity-web-search
+    - productivity-whatis
 
 tools:
   restrict_to_workspace: true

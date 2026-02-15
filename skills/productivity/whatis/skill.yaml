@@ -1,0 +1,12 @@
+name: whatis
+description: Explain any word, phrase, concept, or abbreviation in a short, clear answer.
+commands:
+  - /whatis <term>
+  - /define <term>
+inputs:
+  - word, phrase, abbreviation, or concept
+outputs:
+  - short explanation (1-3 lines)
+stateful: false
+permissions: none
+privacy_notes: Input text is processed by the LLM. Web search used only if needed for verification.
